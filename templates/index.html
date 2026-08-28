@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gathered | Family photo space</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Gathered home"><span class="brand-mark">G</span><span>gathered</span></a>
+        <div class="header-actions"><button class="space-button active" data-space="media">Photos</button><button class="space-button" data-space="chat">CHATBOX</button><button class="profile-button" id="profile-button"><span id="profile-avatar">😊</span><span id="profile-name">Set profile</span></button><button class="theme-button" id="theme-toggle" aria-label="Toggle dark mode">◐</button><div class="status"><span class="status-dot"></span>Family space <form class="logout-form" method="post" action="/logout"><button type="submit">Sign out</button></form></div></div>
+      </header>
+
+      <section class="intro">
+        <div>
+          <p class="eyebrow">The family archive</p>
+          <h1>Every good<br /><em>memory, together.</em></h1>
+          <p class="lede">A shared place for the photos that should never get lost in a camera roll.</p>
+        </div>
+        <button class="upload-button" id="open-upload"><span>+</span> Add media</button>
+      </section>
+
+      <div id="media-space">
+      <section class="toolbar" aria-label="Photo filters">
+        <div class="tabs"><button class="tab active" data-type="photo">Photos</button><button class="tab" data-type="video">Videos</button></div>
+        <div class="toolbar-actions"><span class="media-count" id="media-count"></span><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search memories" /></label><label class="sort-label">Sort <select id="sort"><option value="latest">Latest</option><option value="oldest">Oldest</option></select></label></div>
+      </section>
+
+      <section class="folders" aria-label="Photo folders"><button class="folder active" data-folder="all">All photos</button><div id="folder-list"></div><button class="new-folder" id="new-folder">+ New folder</button></section>
+      <div class="bulk-bar hidden" id="bulk-bar"><strong><span id="selected-count">0</span> selected</strong><button class="clear-button" id="clear-selection">Clear</button><button class="download-button" id="download-selected">↓ Download selected</button><button class="delete-button" id="delete-selected">Delete</button></div>
+      <p class="gallery-status hidden" id="gallery-status" role="status"></p>
+      <section id="people-panel" class="people-panel hidden"></section>
+      <section id="gallery" class="gallery" aria-live="polite"></section>
+      <section id="empty" class="empty hidden"><div class="empty-icon">✦</div><h2>Your archive starts here</h2><p>Bring in the first memory from any phone or laptop.</p><button class="text-button" id="empty-upload">Upload media <span>→</span></button></section>
+      </div>
+      <section class="chat-panel hidden" aria-label="Family chat"><div class="chat-heading"><div><p class="eyebrow">The family room</p><h2>Say hello</h2></div><div class="chat-heading-actions"><span class="chat-live"><span class="status-dot"></span>Live wall</span><button class="clear-chat" id="clear-chat">Clear conversation</button></div></div><div class="chat-messages" id="chat-messages"><p class="chat-empty">Start a little conversation.</p></div><div class="chat-tools"><div class="quick-picks"><button data-kind="emoji" data-message="❤️">❤️</button><button data-kind="emoji" data-message="😂">😂</button><button data-kind="sticker" data-message="🎉 Yay!">🎉</button><button data-kind="sticker" data-message="🙌 Love this">🙌</button><button data-kind="sticker" data-message="🍕 Snack time">🍕</button><button data-kind="gif" data-message="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif">GIF</button></div><form id="chat-form"><input id="chat-input" placeholder="Write something to the family..." maxlength="1000" autocomplete="off" /><button type="submit" aria-label="Send message">↑</button></form><small class="chat-hint">Use the quick reactions or paste a GIF/meme link.</small></div></section>
+    </main>
+
+    <div class="modal hidden" id="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+      <div class="modal-card">
+        <button class="close" id="close-upload" aria-label="Close upload window">×</button>
+        <p class="eyebrow">Add to the archive</p><h2 id="upload-title">Share a memory</h2>
+        <form id="upload-form">
+          <label class="dropzone" for="media"><span class="drop-icon">↑</span><strong id="file-label">Choose photos or videos</strong><small id="file-help">Images and videos · up to 250 MB</small><input id="media" name="media" type="file" accept="image/*,video/*" multiple required /></label>
+          <label class="field-label">Your name<input name="uploader" placeholder="e.g. Maya" maxlength="80" required /></label>
+          <label class="field-label">A note <span>(optional)</span><input name="caption" placeholder="Summer at the lake" maxlength="200" /></label>
+          <label class="field-label">Save in <span>(optional)</span><select name="folder_id" id="upload-folder"><option value="">No folder</option></select></label>
+          <button class="submit-button" id="submit-upload" type="submit">Add to gathered <span>→</span></button>
+          <p class="form-message" id="form-message"></p>
+        </form>
+      </div>
+    </div>
+    <div class="modal hidden" id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title"><div class="modal-card profile-card"><button class="close" id="close-profile" aria-label="Close profile window">×</button><p class="eyebrow">Your place in the room</p><h2 id="profile-title">Make your profile</h2><form id="profile-form"><label class="field-label">Your name<input name="name" maxlength="60" placeholder="e.g. Maya" required /></label><label class="field-label">Choose an avatar<div class="avatar-choices">😊 🐻 🌻 🦋 🐸 🦊 🐼 🐳</div><input class="avatar-input" name="avatar" value="😊" maxlength="4" /></label><button class="submit-button" type="submit">Save profile <span>→</span></button><p class="form-message" id="profile-message"></p></form></div></div>
+    <div class="lightbox hidden" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close photo viewer">×</button><button class="lightbox-nav previous" id="previous-photo" aria-label="Previous photo">←</button>
+      <figure><img id="lightbox-image" alt="" /><video id="lightbox-video" controls></video><figcaption id="lightbox-caption"></figcaption></figure><button class="lightbox-nav next" id="next-photo" aria-label="Next photo">→</button>
+      <button class="lightbox-download" id="lightbox-download">↓ Download photo</button>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>

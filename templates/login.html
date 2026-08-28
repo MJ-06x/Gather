@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in | Gathered</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body class="login-page">
+    <main class="login-card">
+      <a class="brand" href="/" aria-label="Gathered home"><span class="brand-mark">G</span><span>gathered</span></a>
+      <p class="eyebrow">Private family archive</p>
+      <h1>Welcome back.</h1>
+      <p class="login-copy">Enter your family space password to continue.</p>
+      <form method="post">
+        <input type="hidden" name="next" value="{{ request.args.get('next', '') }}" />
+        <label class="field-label" for="password">Password<input id="password" name="password" type="password" autocomplete="current-password" autofocus required /></label>
+        <button class="submit-button" type="submit">Open gathered <span>→</span></button>
+        {% if error %}<p class="form-message">{{ error }}</p>{% endif %}
+      </form>
+    </main>
+  </body>
+</html>
